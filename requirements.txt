@@ -1,0 +1,2 @@
+-e .[test,build]
+-r docs/requirements.txt

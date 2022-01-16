@@ -1,0 +1,62 @@
+import setuptools
+
+
+setuptools.setup(
+    name="Flask-API-Framework",
+    version="0.0.1",
+    keywords="flask api framework",
+    description="Flask API Framework",
+    long_description="Please see the project links.",
+    project_urls={
+        "Documentation": "https://flask-api-framework.readthedocs.io/",
+        "Source": "https://github.com/thnee/flask-api-framework",
+    },
+    license="BSD-3-Clause",
+    author="Mattias Lindvall",
+    author_email="mattias.lindvall@gmail.com",
+    package_dir={"": "src"},
+    packages=["flask_api_framework"],
+    python_requires=">=3.8",
+    install_requires=[
+        "flask ~= 2.0.0",
+        "marshmallow ~= 3.14.0",
+    ],
+    extras_require={
+        "test": [
+            "flask-sqlalchemy ~= 2.5.1",
+            "marshmallow-sqlalchemy ~= 0.27.0",
+            "flask-marshmallow ~= 0.14.0",
+            "pytest ~= 6.2.5",
+            "pytest-cov ~= 3.0.0",
+            "flake8 ~= 4.0.1",
+            "flake8-print ~= 4.0.0",
+            "flake8-bugbear ~= 22.1.11",
+            "black ~= 21.12b0",
+            "isort ~= 5.10.1",
+            "invoke ~= 1.6.0",
+            "tox ~= 3.24.5",
+        ],
+        "build": [
+            "wheel ~= 0.37.1",
+            "twine ~= 3.7.1",
+        ],
+    },
+    classifiers=[
+        # "Development Status :: 1 - Planning",
+        # "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
+        # "Development Status :: 4 - Beta",
+        # "Development Status :: 5 - Production/Stable",
+        # "Development Status :: 6 - Mature",
+        # "Development Status :: 7 - Inactive",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Software Development",
+        "Intended Audience :: Developers",
+        "Framework :: Flask",
+    ],
+)

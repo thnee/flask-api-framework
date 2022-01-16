@@ -1,0 +1,45 @@
+[tool.pytest.ini_options]
+addopts = '''
+    --cache-clear
+    --exitfirst
+    --quiet
+    tests/
+'''
+filterwarnings = [
+    "ignore:SQLALCHEMY_TRACK_MODIFICATIONS:flask_sqlalchemy.FSADeprecationWarning",
+]
+
+[tool.coverage.report]
+fail_under = 88
+precision = 2
+show_missing = true
+skip_covered = true
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = '\.pyi?$'
+exclude = '''
+/(
+  | \.git
+  | __pycache__
+  | build
+  | dist
+  | \.tox
+  | \.pytest_cache
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+py_version = "38"
+lines_after_imports = 2
+skip = [
+  ".git",
+  "__pycache__",
+  "build",
+  "dist",
+  ".tox",
+  ".pytest_cache",
+]

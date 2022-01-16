@@ -1,0 +1,4 @@
+include README.rst LICENSE tox.ini pyproject.toml
+graft src
+graft tests
+global-exclude *.py[co]
