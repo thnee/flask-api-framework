@@ -1,7 +1,7 @@
 Flask-API-Framework
 ===============================================
 
-A framework for building intuitive and semantically correct HTTP API's in Flask.
+Framework for building semantically correct HTTP API’s in Flask.
 
 Install package from PyPI.
 
