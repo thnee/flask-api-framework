@@ -1,3 +1,4 @@
 Sphinx==4.4.0
 sphinx-autobuild==2021.3.14
 Pallets-Sphinx-Themes==2.0.2
+-e .
