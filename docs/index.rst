@@ -19,3 +19,13 @@ Install package from PyPI.
 .. code-block:: text
 
     pip install Flask-API-Framework
+
+
+Table of Contents
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   examples
