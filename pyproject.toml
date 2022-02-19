@@ -17,7 +17,7 @@ skip_covered = true
 
 [tool.black]
 line-length = 88
-target-version = ["py38"]
+target-version = ["py37", "py38", "py39", "py310"]
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -33,7 +33,6 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 88
-py_version = "38"
 lines_after_imports = 2
 skip = [
   ".git",
