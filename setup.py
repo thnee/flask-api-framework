@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="Flask-API-Framework",
-    version="0.0.1",
+    version="0.0.2",
     keywords="flask api framework",
     description="Flask API Framework",
     long_description="Please see the project links.",
