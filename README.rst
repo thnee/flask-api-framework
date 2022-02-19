@@ -3,7 +3,7 @@ Flask-API-Framework
 
 Framework for building semantically correct HTTP API's in Flask.
 
-|GitHub verify| |Documentation Status|
+|GitHub tests| |Documentation Status|
 |PyPI version| |PyPI pyversions| |PyPI license|
 
 
@@ -29,7 +29,7 @@ Links
 .. _Source: https://github.com/thnee/flask-api-framework
 
 
-.. |GitHub verify| image:: https://github.com/thnee/flask-api-framework/actions/workflows/verify.yml/badge.svg
+.. |GitHub tests| image:: https://github.com/thnee/flask-api-framework/actions/workflows/tests.yml/badge.svg
    :target: https://github.com/thnee/flask-api-framework/actions
 
 .. |Documentation Status| image:: https://readthedocs.org/projects/flask-api-framework/badge/?version=latest

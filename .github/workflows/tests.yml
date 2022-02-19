@@ -1,7 +1,7 @@
-name: "Verify"
+name: "Tests"
 on: ["push"]
 jobs:
-  verify:
+  tests:
     strategy:
       matrix:
         python-version:
