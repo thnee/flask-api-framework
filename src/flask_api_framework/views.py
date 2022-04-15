@@ -34,9 +34,9 @@ class BaseViewType(type):
         for _ in bases:
             for action in actions:
                 for name, fallbacks in schema_names.items():
-                    name = f"{name}_schema".format(action=action)
+                    name = f"{name}_schema_cls".format(action=action)
                     fallbacks = [
-                        f"{fallback}_schema".format(action=action)
+                        f"{fallback}_schema_cls".format(action=action)
                         for fallback in fallbacks
                     ]
                     attr = getattr_fallback(cls, name, *fallbacks)
@@ -45,9 +45,9 @@ class BaseViewType(type):
 
 
 class BaseView(flask.views.View, metaclass=BaseViewType):
-    kwargs_schema = None
-    args_schema = None
-    body_schema = None
+    kwargs_schema_cls = None
+    args_schema_cls = None
+    body_schema_cls = None
 
     loaded_kwargs = None
     loaded_args = None
@@ -65,15 +65,15 @@ class BaseView(flask.views.View, metaclass=BaseViewType):
             raise ApiError(status_code=400, source="body") from e
 
     def load_kwargs_schema(self):
-        self.loaded_kwargs = self.kwargs_schema.load(data=flask.request.view_args)
+        self.loaded_kwargs = self.kwargs_schema_cls().load(data=flask.request.view_args)
 
     def load_args_schema(self):
-        self.loaded_args = self.args_schema.load(data=flask.request.args)
+        self.loaded_args = self.args_schema_cls().load(data=flask.request.args)
 
-    def handle_kwargs(self, schema):
+    def handle_kwargs(self, schema_cls):
         try:
-            if schema is not None:
-                self.kwargs_schema = schema
+            if schema_cls is not None:
+                self.kwargs_schema_cls = schema_cls
                 self.load_kwargs_schema()
         except marshmallow.exceptions.ValidationError as e:
             raise ApiError(status_code=400, source="kwargs") from e
@@ -83,10 +83,10 @@ class BaseView(flask.views.View, metaclass=BaseViewType):
         ):
             raise ApiError(status_code=404)
 
-    def handle_args(self, schema):
+    def handle_args(self, schema_cls):
         try:
-            if schema is not None:
-                self.args_schema = schema
+            if schema_cls is not None:
+                self.args_schema_cls = schema_cls
                 self.load_args_schema()
         except marshmallow.exceptions.ValidationError as e:
             raise ApiError(status_code=400, source="args") from e
@@ -98,7 +98,7 @@ class BaseView(flask.views.View, metaclass=BaseViewType):
 
     def get_schema_success_data(
         self,
-        schema,
+        schema_cls,
         data,
         status_code=200,
         data_wrapper=None,
@@ -109,29 +109,29 @@ class BaseView(flask.views.View, metaclass=BaseViewType):
 
         if data_wrapper is None:
             data_wrapper = noop_data_wrapper
-        if schema is not None:
+        if schema_cls is not None:
             return (
-                flask.jsonify(data_wrapper(schema.dump(data, many=many))),
+                flask.jsonify(data_wrapper(schema_cls().dump(data, many=many))),
                 status_code,
             )
-        elif schema is None and data is not None:
+        elif schema_cls is None and data is not None:
             return flask.jsonify(data_wrapper(data)), status_code
         else:
             return "", 204
 
 
 class List(BaseView):
-    list_kwargs_schema = None
-    list_args_schema = None
-    list_body_schema = None
-    list_response_body_schema = None
-    response_body_schema = None
+    list_kwargs_schema_cls = None
+    list_args_schema_cls = None
+    list_body_schema_cls = None
+    list_response_body_schema_cls = None
+    response_body_schema_cls = None
 
     instances = None
 
     def handle_get(self, *args, **kwargs):
-        self.handle_kwargs(self.list_kwargs_schema)
-        self.handle_args(self.list_args_schema)
+        self.handle_kwargs(self.list_kwargs_schema_cls)
+        self.handle_args(self.list_args_schema_cls)
         self.instances = self.get_instances()
         return self.get_list_response()
 
@@ -140,7 +140,7 @@ class List(BaseView):
 
     def get_list_response(self):
         return self.get_schema_success_data(
-            schema=self.list_response_body_schema,
+            schema_cls=self.list_response_body_schema_cls,
             data=self.instances,
             data_wrapper=lambda data: dict(items=data),
             many=True,
@@ -148,17 +148,17 @@ class List(BaseView):
 
 
 class Read(BaseView):
-    read_kwargs_schema = None
-    read_args_schema = None
-    read_body_schema = None
-    read_response_body_schema = None
-    response_body_schema = None
+    read_kwargs_schema_cls = None
+    read_args_schema_cls = None
+    read_body_schema_cls = None
+    read_response_body_schema_cls = None
+    response_body_schema_cls = None
 
     instance = None
 
     def handle_get(self, *args, **kwargs):
-        self.handle_kwargs(self.read_kwargs_schema)
-        self.handle_args(self.read_args_schema)
+        self.handle_kwargs(self.read_kwargs_schema_cls)
+        self.handle_args(self.read_args_schema_cls)
         self.instance = self.get_instance()
         return self.get_read_response()
 
@@ -167,35 +167,37 @@ class Read(BaseView):
 
     def get_read_response(self):
         return self.get_schema_success_data(
-            schema=self.read_response_body_schema,
+            schema_cls=self.read_response_body_schema_cls,
             data=self.instance,
         )
 
 
 class Create(BaseView):
-    create_kwargs_schema = None
-    create_args_schema = None
-    create_body_schema = None
-    create_request_body_schema = None
-    create_response_body_schema = None
-    request_body_schema = None
-    response_body_schema = None
+    create_kwargs_schema_cls = None
+    create_args_schema_cls = None
+    create_body_schema_cls = None
+    create_request_body_schema_cls = None
+    create_response_body_schema_cls = None
+    request_body_schema_cls = None
+    response_body_schema_cls = None
 
     loaded_body = None
     instance = None
 
     def handle_post(self, *args, **kwargs):
-        self.handle_kwargs(self.create_kwargs_schema)
-        self.handle_args(self.create_args_schema)
-        if self.create_request_body_schema is not None:
-            self.body_schema = self.create_request_body_schema
+        self.handle_kwargs(self.create_kwargs_schema_cls)
+        self.handle_args(self.create_args_schema_cls)
+        if self.create_request_body_schema_cls is not None:
+            self.body_schema_cls = self.create_request_body_schema_cls
             self.load_create_request_body_schema()
         self.instance = self.create()
         self.db.session.commit()
         return self.get_create_response()
 
     def load_create_request_body_schema(self):
-        self.loaded_body = self.create_request_body_schema.load(data=flask.request.json)
+        self.loaded_body = self.create_request_body_schema_cls().load(
+            data=flask.request.json
+        )
 
     def create(self):
         if is_sa_mapped(self.loaded_body):
@@ -204,20 +206,20 @@ class Create(BaseView):
 
     def get_create_response(self):
         return self.get_schema_success_data(
-            schema=self.create_response_body_schema,
+            schema_cls=self.create_response_body_schema_cls,
             data=self.instance,
             status_code=201,
         )
 
 
 class Update(BaseView):
-    update_kwargs_schema = None
-    update_args_schema = None
-    update_body_schema = None
-    update_request_body_schema = None
-    update_response_body_schema = None
-    request_body_schema = None
-    response_body_schema = None
+    update_kwargs_schema_cls = None
+    update_args_schema_cls = None
+    update_body_schema_cls = None
+    update_request_body_schema_cls = None
+    update_response_body_schema_cls = None
+    request_body_schema_cls = None
+    response_body_schema_cls = None
 
     loaded_body = None
     instance = None
@@ -229,11 +231,11 @@ class Update(BaseView):
         return self.handle_update(*args, partial=False, **kwargs)
 
     def handle_update(self, *args, partial, **kwargs):
-        self.handle_kwargs(self.update_kwargs_schema)
-        self.handle_args(self.update_args_schema)
+        self.handle_kwargs(self.update_kwargs_schema_cls)
+        self.handle_args(self.update_args_schema_cls)
         self.instance = self.get_instance()
-        if self.update_request_body_schema is not None:
-            self.body_schema = self.load_update_request_body_schema
+        if self.update_request_body_schema_cls is not None:
+            self.body_schema_cls = self.update_request_body_schema_cls
             self.load_update_request_body_schema(partial=partial)
         self.instance = self.update()
         self.db.session.commit()
@@ -247,13 +249,13 @@ class Update(BaseView):
             data=flask.request.json,
             partial=partial,
         )
-        if self.get_schema_load_instance(self.update_request_body_schema):
+        if self.get_schema_load_instance(self.update_request_body_schema_cls):
             kwargs["instance"] = self.instance
-        self.loaded_body = self.update_request_body_schema.load(**kwargs)
+        self.loaded_body = self.update_request_body_schema_cls().load(**kwargs)
 
-    def get_schema_load_instance(self, schema):
+    def get_schema_load_instance(self, schema_cls):
         try:
-            return schema.Meta.load_instance
+            return schema_cls.Meta.load_instance
         except AttributeError:
             return False
 
@@ -262,23 +264,23 @@ class Update(BaseView):
 
     def get_update_response(self):
         return self.get_schema_success_data(
-            schema=self.update_response_body_schema,
+            schema_cls=self.update_response_body_schema_cls,
             data=self.instance,
         )
 
 
 class Delete(BaseView):
-    delete_kwargs_schema = None
-    delete_args_schema = None
-    delete_body_schema = None
-    delete_response_body_schema = None
-    response_body_schema = None
+    delete_kwargs_schema_cls = None
+    delete_args_schema_cls = None
+    delete_body_schema_cls = None
+    delete_response_body_schema_cls = None
+    response_body_schema_cls = None
 
     instance = None
 
     def handle_delete(self, *args, **kwargs):
-        self.handle_kwargs(self.delete_kwargs_schema)
-        self.handle_args(self.delete_args_schema)
+        self.handle_kwargs(self.delete_kwargs_schema_cls)
+        self.handle_args(self.delete_args_schema_cls)
         self.instance = self.get_instance()
         self.instance = self.delete()
         self.db.session.commit()
@@ -294,6 +296,6 @@ class Delete(BaseView):
 
     def get_delete_response(self):
         return self.get_schema_success_data(
-            schema=self.delete_response_body_schema,
+            schema_cls=self.delete_response_body_schema_cls,
             data=self.instance,
         )

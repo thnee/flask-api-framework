@@ -28,7 +28,7 @@ class BookSchema(ma.SQLAlchemyAutoSchema):
 
 
 class Books(af.Create, af.List):
-    body_schema = BookSchema()
+    body_schema_cls = BookSchema
 
     def get_instances(self):
         return Book.query.all()

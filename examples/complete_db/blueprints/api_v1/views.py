@@ -18,7 +18,7 @@ class AuthorsIndex(af.List, af.Create):
     Same body schema for List and Create.
     """
 
-    body_schema = AuthorSchema()
+    body_schema_cls = AuthorSchema
 
     def get_instances(self):
         return Author.query.all()
@@ -29,8 +29,8 @@ class AuthorsBooksList(af.List):
     List all books for a specific author defined by a view arg.
     """
 
-    kwargs_schema = AuthorsBooksListKwargsSchema()
-    body_schema = BookListSchema()
+    kwargs_schema_cls = AuthorsBooksListKwargsSchema
+    body_schema_cls = BookListSchema
 
     def get_instances(self):
         q = Book.query
@@ -45,8 +45,8 @@ class BooksIndex(af.List, af.Create):
     Different body schemas for List and Create.
     """
 
-    list_body_schema = BookListSchema()
-    create_body_schema = BookCreateSchema()
+    list_body_schema_cls = BookListSchema
+    create_body_schema_cls = BookCreateSchema
 
     def get_instances(self):
         return Book.query.all()
@@ -58,5 +58,5 @@ class BookDetail(af.Read, af.Update, af.Delete):
     Same body schema for Read, Update, Delete.
     """
 
-    kwargs_schema = BookDetailKwargsSchema()
-    body_schema = BookDetailBodySchema()
+    kwargs_schema_cls = BookDetailKwargsSchema
+    body_schema_cls = BookDetailBodySchema
