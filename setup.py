@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="Flask-API-Framework",
-    version="0.0.2",
+    version="0.0.3",
     keywords="flask api framework",
     description="Flask API Framework",
     long_description="Please see the project links.",
@@ -18,27 +18,27 @@ setuptools.setup(
     packages=["flask_api_framework"],
     python_requires=">=3.7",
     install_requires=[
-        "flask ~= 2.0.0",
-        "marshmallow ~= 3.14.0",
+        "flask >= 2.0.0",
+        "marshmallow >= 3.14.0",
     ],
     extras_require={
         "test": [
             "flask-sqlalchemy ~= 2.5.1",
-            "marshmallow-sqlalchemy ~= 0.27.0",
+            "marshmallow-sqlalchemy ~= 0.28.0",
             "flask-marshmallow ~= 0.14.0",
-            "pytest ~= 6.2.5",
+            "pytest ~= 7.1.2",
             "pytest-cov ~= 3.0.0",
             "flake8 ~= 4.0.1",
-            "flake8-print ~= 4.0.0",
-            "flake8-bugbear ~= 22.1.11",
-            "black ~= 21.12b0",
+            "flake8-print ~= 5.0.0",
+            "flake8-bugbear ~= 22.4.25",
+            "black ~= 22.3.0",
             "isort ~= 5.10.1",
-            "invoke ~= 1.6.0",
-            "tox ~= 3.24.5",
+            "invoke ~= 1.7.1",
+            "tox ~= 3.25.0",
         ],
         "build": [
             "wheel ~= 0.37.1",
-            "twine ~= 3.7.1",
+            "twine ~= 4.0.0",
         ],
     },
     classifiers=[
